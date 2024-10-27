@@ -1,0 +1,24 @@
+docker run -d -p 33060:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=Online12@ mysql:latest
+docker exec -it mysql-db mysql -p
+
+create database unit_test_db;
+
+
+
+Eliminamos el proceso que corre el contenedor creado.
+docker rm -f mysql-db
+
+Eliminamos todos los volúmenes ya que Docker crea volúmenes temporales sin pedirte permiso.
+docker volume prune
+
+Creamos un volumen
+docker volume create mysql-db-data
+
+Verificamos que se haya creado el volumen
+docker volume ls
+
+DRIVER              VOLUME NAME
+local               mysql-db-data
+
+Levantamos nuevamente el Docker y agregamos el volumen con la opcion --mount
+docker run -d -p 33060:3306 --name mysql-db  -e MYSQL_ROOT_PASSWORD=secret --mount src=mysql-db-data,dst=/var/lib/mysql mysql
