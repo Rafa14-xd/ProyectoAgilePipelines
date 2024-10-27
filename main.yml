@@ -1,41 +1,47 @@
+# Nombre del pipeline
 name: CI AzurePipeline
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# Configuración de triggers
+trigger:
+  branches:
+    include:
+      - main  # Activa el pipeline en la rama main
 
+pr:
+  branches:
+    include:
+      - main  # Activa el pipeline en pull requests a la rama main
+
+# Definición de etapas y trabajos
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Install dependencies
-        run: npm install
-      - name: Run Tests
-        run: npm test
+- job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - task: Checkout@1  # Comando para hacer checkout del código
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x'  # Especifica la versión de Node.js
+    - script: npm install
+      displayName: 'Install dependencies'
+    - script: npm test
+      displayName: 'Run Tests'
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run Linter
-        run: npm run lint
+- job: Lint
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - task: Checkout@1
+    - script: npm run lint
+      displayName: 'Run Linter'
 
-  integration-tests:
-    runs-on: ubuntu-latest
-    needs: [build, lint]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run Integration Tests
-        run: npm run test:integration
+- job: IntegrationTests
+  dependsOn:  # Especifica dependencias de otros trabajos
+    - Build
+    - Lint
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - task: Checkout@1
+    - script: npm run test:integration
+      displayName: 'Run Integration Tests'
