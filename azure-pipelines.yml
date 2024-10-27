@@ -1,19 +1,41 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+name: CI AzurePipeline
 
-trigger:
-- main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-pool:
-  vmImage: windows-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm install
+      - name: Run Tests
+        run: npm test
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Linter
+        run: npm run lint
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: [build, lint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run Integration Tests
+        run: npm run test:integration
