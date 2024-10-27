@@ -1,13 +1,9 @@
 name: CI AzurePipeline
 
-on:
-  push:
-    branches:
+trigger:
+  branches:
+    include:
       - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
