@@ -18,7 +18,7 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-    - task: Checkout@1  # Comando para hacer checkout del código
+    - checkout: self    # Comando para hacer checkout del código
     - task: NodeTool@0
       inputs:
         versionSpec: '14.x'  # Especifica la versión de Node.js
@@ -31,7 +31,7 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-    - task: Checkout@1
+    - checkout: self  
     - script: npm run lint
       displayName: 'Run Linter'
 
@@ -42,6 +42,6 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-    - task: Checkout@1
+    - checkout: self  
     - script: npm run test:integration
       displayName: 'Run Integration Tests'
