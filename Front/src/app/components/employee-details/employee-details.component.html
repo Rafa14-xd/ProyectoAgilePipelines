@@ -1,0 +1,72 @@
+@if (viewMode){
+    @if (currentEmployee.id){
+    <h4>Employee</h4>
+    <div>
+      <label><strong>ID:</strong></label> {{ currentEmployee.id }}
+    </div>
+    <div>
+      <label><strong>First Name:</strong></label> {{ currentEmployee.firstName }}
+    </div>
+    <div>
+        <label><strong>Last Name:</strong></label> {{ currentEmployee.lastName }}
+    </div>
+    <div>
+      <label><strong>eMail:</strong></label> {{ currentEmployee.email }}
+    </div>
+  
+    <a class="badge badge-warning" routerLink="/employees/{{ currentEmployee.id }}">
+      Edit
+    </a>
+    } @else {<p>Please click on a Employee...</p>}
+  } @else {
+    @if (currentEmployee.id) {
+    <div class="edit-form">
+      <h4>Employee</h4>
+      <form>
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            [(ngModel)]="currentEmployee.firstName"
+            name="firstName"
+          />
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              [(ngModel)]="currentEmployee.lastName"
+              name="lastName"
+            />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            id="email"
+            [(ngModel)]="currentEmployee.email"
+            name="email"
+          />
+        </div>
+      </form>
+  
+      <button class="badge badge-danger mr-2" 
+        (click)="deleteEmployee()">
+        Delete
+      </button>
+  
+      <button
+        type="submit"
+        class="badge badge-success mb-2"
+        (click)="updateEmployee()">
+        Update
+      </button>
+      <p>{{ message }}</p>
+    </div>
+    } @else {<p>Cannot access this Employee...</p>}
+  }
